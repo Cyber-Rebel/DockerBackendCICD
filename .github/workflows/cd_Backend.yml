@@ -1,12 +1,3 @@
-# Build  the Docker image 
-# push the image to Docker Hub
-#  braches:[main, dev]
- #  uses: actions/checkout@v3  -- checkout the codebase on ubuntu-latest
- # uses: actions/checkout@v3  --> ye cmd kya karega clone you code base  on ubuntu-latest machine 
-#  uses: docker/login-action@v2  --> ye cmd kya karega docker hub pr login krne k liye 
-
-# username: ${{ secrets.DOCKER_HUB_USERNAME }} its variable pineline stored in github secrets 
-# Go to repo setting --> secrets and variables --> actions --> new repository secret
 
 
 name: Backend CI/CD Pipeline
@@ -27,6 +18,14 @@ jobs:
       - name: Docker Login
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          username: ${{ secrets.DOCKER_HUB_USERNAME}}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME}}/backend:${{ github.sha }}
 
+# this step almost same one change the  Deploy step kya devlop vm autosaccling etc etc bas ye change honge baki  sab sahi honge 
